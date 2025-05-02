@@ -152,7 +152,7 @@ Pedidos {
 }
 
 Categorias ||--o{ Productos : contiene
-Usuarios ||--o{ Direcciones : tiene
+Usuarios ||--|| Direcciones : tiene
 Usuarios ||--o{ Pedidos : realiza
 Productos ||--o{ Pedidos : incluye
 ```
