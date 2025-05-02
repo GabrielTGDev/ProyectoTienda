@@ -11,9 +11,13 @@ entre la lógica de negocio y la interfaz de usuario.
 1. [Descripción del Proyecto](#descripción-del-proyecto)
 2. [Instalación](#instalación)
 3. [Base de Datos](#base-de-datos)
+   1. [Descripción de las Tablas](#descripción-de-las-tablas)
+   2. [Diagrama de Entidad-Relación (ER)](#diagrama-de-entidad-relación-er)
 4. [Requisitos Funcionales](#requisitos-funcionales)
 5. [Diagrama de Clases UML](#diagrama-de-clases-uml)
 6. [Diseño de la Aplicación de Tienda](#diseño-de-la-aplicación-de-tienda)
+   1. [Diagrama de Conexiones entre Vistas](#diagrama-de-conexiones-entre-vistas)
+   2. [Diagrama de Flujo de la Aplicación](#diagrama-de-flujo-de-la-aplicación)
 
 ## Descripción del Proyecto
 
