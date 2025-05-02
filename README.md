@@ -131,8 +131,7 @@ Usuarios {
     string email
 }
 Direcciones {
-    int usuario_id PK
-    int usuario_id FK
+    int usuario_id PK, FK
     string calle
     string ciudad
     string codigo_postal
