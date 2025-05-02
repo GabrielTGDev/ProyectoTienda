@@ -6,6 +6,15 @@ entre la lógica de negocio y la interfaz de usuario.
 > Asegúrate de tener instalado Java y un IDE compatible (como Eclipse o IntelliJ) para ejecutar el proyecto.
 > Además, necesitarás tener MySQL instalado y configurado para la base de datos.
 
+## Índice
+
+1. [Descripción del Proyecto](#descripción-del-proyecto)
+2. [Instalación](#instalación)
+3. [Base de Datos](#base-de-datos)
+4. [Requisitos Funcionales](#requisitos-funcionales)
+5. [Diagrama de Clases UML](#diagrama-de-clases-uml)
+6. [Diseño de la Aplicación de Tienda](#diseño-de-la-aplicación-de-tienda)
+
 ## Descripción del Proyecto
 
 Este proyecto consiste en una aplicación de escritorio para gestionar una tienda, utilizando Java y Swing. La aplicación
