@@ -1,4 +1,11 @@
 # Proyecto Tienda
+
+> [!NOTE]  
+> Este proyecto utiliza Java y Swing para la interfaz gráfica, y sigue el patrón de diseño MVC para una separación clara
+entre la lógica de negocio y la interfaz de usuario.
+> Asegúrate de tener instalado Java y un IDE compatible (como Eclipse o IntelliJ) para ejecutar el proyecto.
+> Además, necesitarás tener MySQL instalado y configurado para la base de datos.
+
 ## Descripción del Proyecto
 
 Este proyecto consiste en una aplicación de escritorio para gestionar una tienda, utilizando Java y Swing. La aplicación
@@ -9,6 +16,12 @@ interfaz de usuario.
 
 ## Instalación
 
+> [!TIP]
+> Antes de ejecutar la aplicación, asegúrate de que la base de datos MySQL esté configurada correctamente y que las
+tablas estén creadas según el esquema proporcionado.
+> Puedes usar herramientas como MySQL Workbench o phpMyAdmin para gestionar la base de datos y verificar que las tablas
+estén correctamente creadas.
+
 Para instalar la aplicación, sigue estos pasos:
 1. Configura la base de datos MySQL y crea las tablas según el esquema proporcionado.
 2. Descarga el código fuente del proyecto.
@@ -18,6 +31,13 @@ Para instalar la aplicación, sigue estos pasos:
 6. Ejecuta la aplicación.
 
 ## Base de Datos
+
+> [!IMPORTANT]  
+> Configura correctamente la conexión a la base de datos en el archivo `src/main/java/dbconnection/DBConnection.java`
+para evitar errores al iniciar la aplicación.
+> Asegúrate de que el usuario y la contraseña de la base de datos sean correctos y que el servidor MySQL esté levantado.
+> Además, verifica que el puerto de conexión sea el correcto (por defecto es 3306, pero en la configuración está 3307).
+> Si cambias el puerto, asegúrate de actualizarlo en la configuración de conexión.
 
 La base de datos está diseñada para almacenar la información de los usuarios, productos, categorías y pedidos. A
 continuación se presenta el esquema de la base de datos:
