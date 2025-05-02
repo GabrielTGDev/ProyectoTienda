@@ -1,9 +1,10 @@
 package org.example;
 
-import dbconnection.Connection;
+import dbconnection.DBConnection;
+import java.sql.*;
 
 public class Main {
     public static void main(String[] args) {
-        Connection.connect();
+        Connection connection = DBConnection.getConnection();
     }
 }
