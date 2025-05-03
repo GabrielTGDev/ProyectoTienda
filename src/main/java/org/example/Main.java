@@ -1,10 +1,10 @@
 package org.example;
 
-import dbconnection.DBConnection;
-import java.sql.*;
+import views.ProyectoTiendaForm;
 
 public class Main {
-    public static void main(String[] args) {
-        Connection connection = DBConnection.getConnection();
-    }
+//    public static void main(String[] args) {
+//        ProyectoTiendaForm tienda = new ProyectoTiendaForm();
+//        tienda.setVisible(true);
+//    }
 }
