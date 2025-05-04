@@ -373,3 +373,12 @@ lista correspondiente se actualiza mostrando los cambios. De esta forma se garan
 ### Figma
 El diseño de la interfaz gráfica se realizó utilizando Figma, al cual se puede acceder desde el siguiente enlace:
 - [Figma - Proyecto Tienda](https://www.figma.com/design/jQd6LendJFD7W6uMXubwSV/Tienda?node-id=0-1&t=vT0lWk0I6M9R12VF-1)
+
+#### Info y Componentes
+![Info y Componentes.svg](src/main/resources/Info%20y%20Componentes.svg)
+
+#### Ventana Principal
+![Principal.svg](src/main/resources/Principal.svg)
+
+#### Formularios de adición y edición
+![Formularios.svg](src/main/resources/Formularios.svg)
