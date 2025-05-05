@@ -375,10 +375,10 @@ El diseño de la interfaz gráfica se realizó utilizando Figma, al cual se pued
 - [Figma - Proyecto Tienda](https://www.figma.com/design/jQd6LendJFD7W6uMXubwSV/Tienda?node-id=0-1&t=vT0lWk0I6M9R12VF-1)
 
 #### Info y Componentes
-![Info y Componentes.svg](src/main/resources/Info%20y%20Componentes.svg)
+![Info y Componentes.svg](src/main/resources/img/Info%20y%20Componentes.svg)
 
 #### Ventana Principal
-![Principal.svg](src/main/resources/Principal.svg)
+![Principal.svg](src/main/resources/img/Principal.svg)
 
 #### Formularios de adición y edición
-![Formularios.svg](src/main/resources/Formularios.svg)
+![Formularios.svg](src/main/resources/img/Formularios.svg)
