@@ -1,5 +1,8 @@
 package com.view;
 
+        import com.controller.ProductosController;
+        import com.model.ProductosModel;
+
         import javax.swing.*;
         import java.awt.*;
         import java.awt.event.ActionEvent;
@@ -111,10 +114,17 @@ package com.view;
              * @param option La opción seleccionada del menú.
              */
             private void showContent(String option) {
-                // Aquí se cargarán las vistas secundarias según la opción seleccionada
-                System.out.println("Opción seleccionada: " + option);
-                // Ejemplo: Cambiar el contenido dinámico basado en la opción
-                // contentPanel.add(new UsuariosView(), "Usuarios");
-                // ((CardLayout) contentPanel.getLayout()).show(contentPanel, option);
+                contentPanel.removeAll();
+
+                if ("Productos".equals(option)) {
+                    ProductosModel model = new ProductosModel();
+                    ProductosView view = new ProductosView();
+                    new ProductosController(model, view);
+                    contentPanel.add(view, "Productos");
+                }
+
+                ((CardLayout) contentPanel.getLayout()).show(contentPanel, option);
+                contentPanel.revalidate();
+                contentPanel.repaint();
             }
         }
