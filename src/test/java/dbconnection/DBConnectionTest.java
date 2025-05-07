@@ -1,5 +1,6 @@
 package dbconnection;
 
+import com.dbconnection.DBConnection;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
