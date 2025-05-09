@@ -77,25 +77,65 @@ public class ProductosView extends JPanel {
         return menuPanel;
     }
 
-    private void abrirFormulario(String titulo, String[] datos) {
-        JPanel formularioPanel = new JPanel(new GridLayout(3, 2, 10, 10));
-        formularioPanel.setBackground(Color.WHITE);
-        formularioPanel.add(new JLabel("Nombre:"));
-        formularioPanel.add(new JTextField(datos[0]));
-        formularioPanel.add(new JLabel("Precio:"));
-        formularioPanel.add(new JTextField(datos[1]));
-        formularioPanel.add(new JLabel("Categoría:"));
-        formularioPanel.add(new JComboBox<>(new String[]{"Categoría 1", "Categoría 2"}));
+    /**
+         * Abre un formulario en una nueva ventana con los campos proporcionados.
+         *
+         * @param titulo El título del formulario.
+         * @param datos  Los datos iniciales para los campos del formulario.
+         */
+        private void abrirFormulario(String titulo, String[] datos) {
+            // Configurar el panel principal del formulario
+            JPanel formularioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10)); // Layout fluido para organizar los componentes
+            formularioPanel.setBackground(Color.WHITE); // Fondo blanco para el formulario
+            formularioPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20)); // Padding general para el formulario
 
-        FormsView formsView = new FormsView(titulo, formularioPanel);
+            // Crear y agregar los campos al formulario
+            String[] etiquetas = {"Nombre:", "Precio:", "Categoría:"}; // Etiquetas para los campos del formulario
+            for (int i = 0; i < etiquetas.length; i++) {
+                // Crear un contenedor para el label y el input
+                JPanel campoPanel = new JPanel();
+                campoPanel.setLayout(new BoxLayout(campoPanel, BoxLayout.Y_AXIS)); // Ordenar los componentes verticalmente
+                campoPanel.setPreferredSize(new Dimension(600, 90)); // Tamaño del contenedor
+                campoPanel.setMaximumSize(new Dimension(600, 90)); // Evitar desbordes
+                campoPanel.setBackground(Color.WHITE); // Fondo blanco para el contenedor
 
-        JFrame frame = new JFrame("Formulario - " + titulo);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setMinimumSize(new Dimension(1280, 720));
-        frame.setResizable(false);
-        frame.add(formsView);
-        frame.setVisible(true);
-    }
+                // Crear el label para el campo
+                JLabel label = new JLabel(etiquetas[i]);
+                label.setFont(new Font("Arial", Font.PLAIN, 24)); // Fuente del label
+                label.setAlignmentX(Component.LEFT_ALIGNMENT); // Alinear el label a la izquierda
+                campoPanel.add(label); // Agregar el label al contenedor
+
+                // Crear el input o comboBox según el campo
+                if (i < 2) { // Para los campos "Nombre" y "Precio"
+                    JTextField input = new JTextField(datos[i]); // Campo de texto con el dato inicial
+                    input.setFont(new Font("Arial", Font.PLAIN, 24)); // Fuente del campo de texto
+                    input.setAlignmentX(Component.LEFT_ALIGNMENT); // Alinear el campo de texto a la izquierda
+                    input.setBorder(BorderFactory.createLineBorder(Color.GRAY)); // Borde del campo de texto
+                    input.setMaximumSize(new Dimension(610, 40)); // Tamaño del campo de texto
+                    campoPanel.add(input); // Agregar el campo de texto al contenedor
+                } else { // Para el campo "Categoría"
+                    JComboBox<String> comboBox = new JComboBox<>(new String[]{"Categoría 1", "Categoría 2"}); // ComboBox con opciones
+                    comboBox.setFont(new Font("Arial", Font.PLAIN, 24)); // Fuente del comboBox
+                    comboBox.setAlignmentX(Component.LEFT_ALIGNMENT); // Alinear el comboBox a la izquierda
+                    comboBox.setMaximumSize(new Dimension(610, 40)); // Tamaño del comboBox
+                    campoPanel.add(comboBox); // Agregar el comboBox al contenedor
+                }
+
+                // Agregar el contenedor del campo al panel principal del formulario
+                formularioPanel.add(campoPanel);
+            }
+
+            // Crear la vista del formulario utilizando FormsView
+            FormsView formsView = new FormsView(titulo, formularioPanel);
+
+            // Configurar y mostrar la ventana del formulario
+            JFrame frame = new JFrame("Formulario - " + titulo); // Crear una nueva ventana con el título
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Cerrar la ventana al salir
+            frame.setMinimumSize(new Dimension(1280, 720)); // Tamaño mínimo de la ventana
+            frame.setResizable(false); // Deshabilitar el redimensionamiento de la ventana
+            frame.add(formsView); // Agregar la vista del formulario a la ventana
+            frame.setVisible(true); // Hacer visible la ventana
+        }
 
     /**
      * Crea un botón con estilo personalizado.
