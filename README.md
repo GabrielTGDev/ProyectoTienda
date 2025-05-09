@@ -382,3 +382,45 @@ El diseño de la interfaz gráfica se realizó utilizando Figma, al cual se pued
 
 #### Formularios de adición y edición
 ![Formularios.svg](src/main/resources/img/Formularios.svg)
+
+## Mapa de Git
+
+```mermaid
+gitGraph
+    commit id: "Initial commit"
+
+    branch S1/db_connection
+    checkout S1/db_connection
+    commit id: "DB connection work"
+    checkout main
+    merge S1/db_connection
+
+    branch S1/swing_test
+    checkout S1/swing_test
+    commit id: "Swing tests"
+    checkout main
+    merge S1/swing_test
+
+    branch S2/ventana_principal
+    checkout S2/ventana_principal
+    commit id: "Ventana principal"
+
+    branch S2/ventana_principal_productos
+    checkout S2/ventana_principal_productos
+    commit id: "Ventana principal - productos"
+    checkout S2/ventana_principal
+    merge S2/ventana_principal_productos
+
+    branch S2/ventana_formularios
+    checkout S2/ventana_formularios
+    commit id: "Ventana formularios"
+    
+    branch S2/ventana_formularios_productos
+    checkout S2/ventana_formularios_productos
+    commit id: "Ventana formularios - productos"
+    checkout S2/ventana_formularios
+    merge S2/ventana_formularios_productos
+
+    checkout S2/ventana_principal
+    merge S2/ventana_formularios
+```
