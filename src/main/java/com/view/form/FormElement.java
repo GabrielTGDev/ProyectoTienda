@@ -32,7 +32,14 @@ package com.view.form;
             DecimalFormat formato = new DecimalFormat("#,##0.00");
             formato.setGroupingUsed(false);
             JFormattedTextField input = new JFormattedTextField(formato);
-            input.setValue(valor);
+
+            // Validar y establecer el valor inicial
+            if (valor instanceof Number) {
+                input.setValue(valor);
+            } else {
+                input.setValue(0.0); // Valor predeterminado si el valor no es un número
+            }
+
             return crearCampo(etiqueta, input);
         }
 
