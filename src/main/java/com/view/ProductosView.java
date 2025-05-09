@@ -213,4 +213,12 @@ package com.view;
             tableModel.setRowCount(0);
             productos.forEach(tableModel::addRow);
         }
+
+        /**
+         * Elimina un producto seleccionado de la tabla.
+         * (Implementación pendiente)
+         */
+        private void eliminarProducto() {
+            // Lógica para eliminar un producto
+        }
     }
