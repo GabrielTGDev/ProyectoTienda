@@ -62,12 +62,39 @@ public class ProductosView extends JPanel {
         JButton editarProductoButton = crearBoton("Editar", "#D5843B");
         JButton eliminarProductoButton = crearBoton("Eliminar", "#C54A3D");
 
+        // Abrir formulario añadir producto
+        nuevoProductoButton.addActionListener(e -> abrirFormulario("Añadir Producto", new String[]{"", "", "Categoría 1"}));
+
+        // Abrir formulario editar producto
+        editarProductoButton.addActionListener(e -> abrirFormulario("Editar Producto", new String[]{"Producto existente", "100.00", "Categoría 1"}));
+
+
         // Agregar botones al menú
         menuPanel.add(nuevoProductoButton);
         menuPanel.add(editarProductoButton);
         menuPanel.add(eliminarProductoButton);
 
         return menuPanel;
+    }
+
+    private void abrirFormulario(String titulo, String[] datos) {
+        JPanel formularioPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        formularioPanel.setBackground(Color.WHITE);
+        formularioPanel.add(new JLabel("Nombre:"));
+        formularioPanel.add(new JTextField(datos[0]));
+        formularioPanel.add(new JLabel("Precio:"));
+        formularioPanel.add(new JTextField(datos[1]));
+        formularioPanel.add(new JLabel("Categoría:"));
+        formularioPanel.add(new JComboBox<>(new String[]{"Categoría 1", "Categoría 2"}));
+
+        FormsView formsView = new FormsView(titulo, formularioPanel);
+
+        JFrame frame = new JFrame("Formulario - " + titulo);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setMinimumSize(new Dimension(1280, 720));
+        frame.setResizable(false);
+        frame.add(formsView);
+        frame.setVisible(true);
     }
 
     /**
