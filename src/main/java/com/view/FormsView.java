@@ -3,11 +3,10 @@ package com.view;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Clase que representa una vista de formulario con un título, contenido dinámico y botones inferiores.
+ */
 public class FormsView extends JPanel {
-
-    private JLabel titleLabel; // Etiqueta para el título
-    private JPanel contentPanel; // Panel dinámico para el contenido
-    private JPanel bottomPanel; // Panel inferior con botones
 
     /**
      * Constructor de FormsView.
@@ -16,66 +15,82 @@ public class FormsView extends JPanel {
      * @param content Contenido que se mostrará en el panel dinámico.
      */
     public FormsView(String title, JPanel content) {
-        // Configuración del panel principal
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(1280, 720));
-        setBackground(Color.decode("#FFFFFF"));
+        setBackground(Color.WHITE);
 
-        // Crear y configurar el título
-        titleLabel = new JLabel(title, SwingConstants.CENTER);
+        // Configurar y agregar el título
+        add(crearTitulo(title), BorderLayout.NORTH);
+
+        // Configurar y agregar el contenido dinámico
+        add(crearPanelContenido(content), BorderLayout.CENTER);
+
+        // Configurar y agregar el panel inferior con botones
+        add(crearPanelInferior(), BorderLayout.SOUTH);
+    }
+
+    /**
+     * Crea el componente del título.
+     *
+     * @param title Texto del título.
+     * @return Un JLabel configurado como título.
+     */
+    private JLabel crearTitulo(String title) {
+        JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
         titleLabel.setPreferredSize(new Dimension(1280, 100));
         titleLabel.setOpaque(true);
         titleLabel.setBackground(Color.decode("#ECF0F1"));
         titleLabel.setForeground(Color.decode("#333333"));
         titleLabel.setFont(new Font("Arial", Font.PLAIN, 40));
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setVerticalAlignment(SwingConstants.CENTER);
+        return titleLabel;
+    }
 
-        // Agregar el título al panel principal
-        add(titleLabel, BorderLayout.NORTH);
-
-        // Configurar el panel dinámico
-        contentPanel = new JPanel(new BorderLayout());
+    /**
+     * Crea el panel dinámico para el contenido.
+     *
+     * @param content Contenido a mostrar en el panel.
+     * @return Un JPanel configurado con el contenido.
+     */
+    private JPanel crearPanelContenido(JPanel content) {
+        JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Color.WHITE);
-
-        // Agregar el contenido proporcionado al panel dinámico
         if (content != null) {
             contentPanel.add(content, BorderLayout.CENTER);
         }
+        return contentPanel;
+    }
 
-        // Agregar el panel dinámico al panel principal
-        add(contentPanel, BorderLayout.CENTER);
-
-        // Crear y configurar el panel inferior
-        bottomPanel = new JPanel();
+    /**
+     * Crea el panel inferior con botones "Aceptar" y "Cancelar".
+     *
+     * @return Un JPanel con los botones configurados.
+     */
+    private JPanel crearPanelInferior() {
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         bottomPanel.setPreferredSize(new Dimension(1280, 80));
-        bottomPanel.setBackground(Color.decode("#FFFFFF"));
-        bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        bottomPanel.setBackground(Color.WHITE);
 
-        // Crear y configurar los botones
-        JButton acceptButton = new JButton("Aceptar");
-        acceptButton.setPreferredSize(new Dimension(140, 60));
-        acceptButton.setFont(new Font("Arial", Font.PLAIN, 24));
-        acceptButton.setBackground(Color.decode("#48BA78"));
-        acceptButton.setForeground(Color.WHITE);
-        acceptButton.setFocusPainted(false);
-        acceptButton.setBorder(BorderFactory.createEmptyBorder());
-        acceptButton.setBorder(BorderFactory.createLineBorder(Color.decode("#48BA78"), 1, true));
+        bottomPanel.add(crearBoton("Aceptar", "#48BA78"));
+        bottomPanel.add(crearBoton("Cancelar", "#C54A3D"));
 
-        JButton cancelButton = new JButton("Cancelar");
-        cancelButton.setPreferredSize(new Dimension(140, 60));
-        cancelButton.setFont(new Font("Arial", Font.PLAIN, 24));
-        cancelButton.setBackground(Color.decode("#C54A3D"));
-        cancelButton.setForeground(Color.WHITE);
-        cancelButton.setFocusPainted(false);
-        cancelButton.setBorder(BorderFactory.createEmptyBorder());
-        cancelButton.setBorder(BorderFactory.createLineBorder(Color.decode("#C54A3D"), 1, true));
+        return bottomPanel;
+    }
 
-        // Agregar los botones al panel inferior
-        bottomPanel.add(acceptButton);
-        bottomPanel.add(cancelButton);
-
-        // Agregar el panel inferior al panel principal
-        add(bottomPanel, BorderLayout.SOUTH);
+    /**
+     * Crea un botón con estilo personalizado.
+     *
+     * @param texto    Texto del botón.
+     * @param colorHex Color de fondo del botón en formato hexadecimal.
+     * @return Un JButton configurado.
+     */
+    private JButton crearBoton(String texto, String colorHex) {
+        JButton boton = new JButton(texto);
+        boton.setPreferredSize(new Dimension(140, 60));
+        boton.setFont(new Font("Arial", Font.PLAIN, 24));
+        boton.setBackground(Color.decode(colorHex));
+        boton.setForeground(Color.WHITE);
+        boton.setFocusPainted(false);
+        boton.setBorder(BorderFactory.createLineBorder(Color.decode(colorHex), 1, true));
+        return boton;
     }
 }
