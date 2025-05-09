@@ -1,18 +1,28 @@
 package views;
 
+import controllers.Controller;
 import dbconnection.DBConnection;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.util.Arrays;
+import java.util.LinkedList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import models.*;
+import models.ModelsEnum;
 
 public class ProyectoTiendaForm extends JFrame {
-    private final DefaultTableModel tm;
+    private final DefaultTableModel tmUsuario;
+    private final DefaultTableModel tmProducto;
+    private final DefaultTableModel tmPedido;
+    private final DefaultTableModel tmDireccion;
+    private final DefaultTableModel tmCategoria;
 
     public ProyectoTiendaForm() {
-        tm = new DefaultTableModel(Usuario.getFields(), 0);
+        tmUsuario = new DefaultTableModel(ModelsEnum.Usuarios.getColumnsName(), 0);
+        tmProducto = new DefaultTableModel(ModelsEnum.Productos.getColumnsName(), 0);
+        tmPedido = new DefaultTableModel(ModelsEnum.Pedidos.getColumnsName(), 0);
+        tmDireccion = new DefaultTableModel(ModelsEnum.Direcciones.getColumnsName(), 0);
+        tmCategoria = new DefaultTableModel(ModelsEnum.Categorias.getColumnsName(), 0);
         initComponents();
         iniciarJPanel();
         setLocationRelativeTo(null);
@@ -57,7 +67,7 @@ public class ProyectoTiendaForm extends JFrame {
             }
         });
 
-        jTable.setModel(tm);
+        jTable.setModel(tmUsuario);
         jScrollTable.setViewportView(jTable);
 
         javax.swing.GroupLayout jPanelUsuarioLayout = new javax.swing.GroupLayout(jPanelUsuario);
@@ -187,16 +197,31 @@ public class ProyectoTiendaForm extends JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void fillTable(DefaultTableModel tm, LinkedList<String[]> tuplas) {
+        tm.setNumRows(tuplas.size());
+        int row = 0, col;
+        for (String[] t : tuplas) {
+            col = 0;
+            for (String s : t)
+                tm.setValueAt(s, row, col++);
+            ++row;
+        }
+//        tuplas.forEach(u -> {System.out.println(Arrays.toString(u));});
+    }
+
     private void jButtonSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectActionPerformed
-//        try (ResultSet rs = DBConnection.getStmt().executeQuery("SELECT * FROM USUARIOS;")) {
-//            while(rs.next()) {
-//                System.out.print(rs.getString("nombre"));
-//                System.out.print("\t" + rs.getString("apellido"));
-//                System.out.println("\t" + rs.getString("email"));
-//            }
-//        } catch (Exception ex) {
-//            System.out.println("Unconnected");
-//        }
+        Component selected = jTabbed.getSelectedComponent();
+        if (selected == jPanelUsuario) {
+            fillTable(tmUsuario, Controller.selectAll(ModelsEnum.Usuarios));
+        } else if (selected == jPanelProducto) {
+            fillTable(tmProducto, Controller.selectAll(ModelsEnum.Productos));
+        } else if (selected == jPanelPedido) {
+            fillTable(tmPedido, Controller.selectAll(ModelsEnum.Pedidos));
+        } else if (selected == jPanelDireccion) {
+            fillTable(tmDireccion, Controller.selectAll(ModelsEnum.Direcciones));
+        } else {
+            fillTable(tmCategoria, Controller.selectAll(ModelsEnum.Categorias));
+        }
     }//GEN-LAST:event_jButtonSelectActionPerformed
 
     private void jButtonInsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertActionPerformed
@@ -219,32 +244,28 @@ public class ProyectoTiendaForm extends JFrame {
 //        } catch(Exception ex) { System.err.println(ex.getMessage()); }
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
+    private void showTableModel(DefaultTableModel tm, ModelsEnum tableName, JPanel panel) {
+        tm.setColumnIdentifiers(tableName.getFields());
+        panel.setLayout(new BorderLayout());
+        panel.add(jScrollTable);
+        jTable.setModel(tm);
+//        System.out.println(Arrays.toString(tableName.getFields()));
+    }
+
     private void jTabbedMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedMouseClicked
-        System.out.println(jTabbed.getTitleAt(jTabbed.getSelectedIndex()));
+//        System.out.println(jTabbed.getTitleAt(jTabbed.getSelectedIndex()));
         Component selected = jTabbed.getSelectedComponent();
         if (selected == jPanelUsuario) {
-            tm.setColumnIdentifiers(Usuario.getFields());
-            jPanelUsuario.setLayout(new BorderLayout());
-            jPanelUsuario.add(jScrollTable);
-            System.out.println(Arrays.toString(Usuario.getFields()));
+            showTableModel(tmUsuario, ModelsEnum.Usuarios, jPanelUsuario);
         } else if (selected == jPanelProducto) {
-            tm.setColumnIdentifiers(Producto.getFields());
-            jPanelProducto.add(jScrollTable);
-            System.out.println(Arrays.toString(Producto.getFields()));
+            showTableModel(tmProducto, ModelsEnum.Productos, jPanelProducto);
         } else if (selected == jPanelPedido) {
-            tm.setColumnIdentifiers(Pedido.getFields());
-            jPanelPedido.add(jScrollTable);
-            System.out.println(Arrays.toString(Pedido.getFields()));
+            showTableModel(tmPedido, ModelsEnum.Pedidos, jPanelPedido);
         } else if (selected == jPanelDireccion) {
-            tm.setColumnIdentifiers(Direccion.getFields());
-            jPanelDireccion.add(jScrollTable);
-            System.out.println(Arrays.toString(Direccion.getFields()));
+            showTableModel(tmDireccion, ModelsEnum.Direcciones, jPanelDireccion);
         } else {
-            tm.setColumnIdentifiers(Categoria.getFields());
-            jPanelCategoria.add(jScrollTable);
-            System.out.println(Arrays.toString(Categoria.getFields()));
+            showTableModel(tmCategoria, ModelsEnum.Categorias, jPanelCategoria);
         }
-        jTable.setModel(tm);
     }//GEN-LAST:event_jTabbedMouseClicked
 
     public static void main(String args[]) {
