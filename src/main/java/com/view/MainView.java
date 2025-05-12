@@ -18,14 +18,6 @@ package com.view;
             private JButton selectedButton; // Botón actualmente seleccionado
 
             /**
-             * Función principal para iniciar la aplicación.
-             * @param args Argumentos de línea de comandos.
-             */
-            public static void main(String[] args) {
-                new MainView();
-            }
-
-            /**
              * Constructor de la clase MainView.
              * Configura la ventana principal, el menú superior y el panel dinámico.
              */
