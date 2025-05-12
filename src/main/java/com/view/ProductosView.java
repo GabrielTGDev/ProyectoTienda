@@ -1,5 +1,6 @@
 package com.view;
 
+import com.model.CategoriasModel;
 import com.view.form.FormElement;
 
 import javax.swing.*;
@@ -78,12 +79,26 @@ public class ProductosView extends JPanel {
      * @param datos  Los datos iniciales del formulario.
      */
     private void abrirFormulario(String titulo, Object[] datos) {
+        // Obtener categorías desde el modelo
+        CategoriasModel categoriasModel = new CategoriasModel();
+        List<String[]> categorias = categoriasModel.obtenerCategorias();
+
+        // Crear un array de nombres de categorías para el JComboBox
+        String[] opcionesCategorias = new String[categorias.size() + 1];
+        opcionesCategorias[0] = "Seleccione una categoría"; // Opción inicial
+        for (int i = 0; i < categorias.size(); i++) {
+            opcionesCategorias[i + 1] = categorias.get(i)[1]; // Nombre de la categoría
+        }
+
+        // Crear el panel del formulario
         JPanel formularioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         formularioPanel.setBackground(Color.WHITE);
         formularioPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
         formularioPanel.add(FormElement.crearCampoTexto("Nombre:", (String) datos[0]));
         formularioPanel.add(FormElement.crearCampoPrecio("Precio:", datos[1]));
-        formularioPanel.add(FormElement.crearCampoComboBox("Categoría:", new String[]{"Categoría 1", "Categoría 2"}, datos[2]));
+        formularioPanel.add(FormElement.crearCampoComboBox("Categoría:", opcionesCategorias, datos[2]));
+
+        // Mostrar el formulario
         mostrarFormulario(titulo, formularioPanel);
     }
 
