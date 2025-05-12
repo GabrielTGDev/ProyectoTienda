@@ -423,4 +423,11 @@ gitGraph
 
     checkout S2/ventana_principal
     merge S2/ventana_formularios
+
+    commit id: "Refactor de main"
+    commit id: "Creación de CategoríasModel"
+
+    branch S2/crud_productos
+    checkout S2/crud_productos
+    commit id: "Crud productos"
 ```
