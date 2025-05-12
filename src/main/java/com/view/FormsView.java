@@ -71,9 +71,30 @@ public class FormsView extends JPanel {
         bottomPanel.setBackground(Color.WHITE);
 
         bottomPanel.add(crearBoton("Aceptar", "#48BA78"));
-        bottomPanel.add(crearBoton("Cancelar", "#C54A3D"));
+        bottomPanel.add(crearBotonCancelar());
 
         return bottomPanel;
+    }
+
+    /**
+     * Crea el botón "Cancelar" con funcionalidad para cerrar la ventana.
+     *
+     * @return Un JButton configurado.
+     */
+    private JButton crearBotonCancelar() {
+        JButton botonCancelar = crearBoton("Cancelar", "#C54A3D");
+        botonCancelar.addActionListener(e -> {
+            if (JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Está seguro de que desea cerrar? Los cambios no guardados se perderán.",
+                    "Confirmar cierre",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            ) == JOptionPane.YES_OPTION) {
+                SwingUtilities.getWindowAncestor(this).dispose();
+            }
+        });
+        return botonCancelar;
     }
 
     /**
