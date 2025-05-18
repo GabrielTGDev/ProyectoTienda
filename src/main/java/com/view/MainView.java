@@ -35,7 +35,7 @@ public class MainView extends JFrame {
         menuPanel.setPreferredSize(new Dimension(getWidth(), 100));
         menuPanel.setBackground(Color.decode("#ECF0F1"));
 
-        String[] menuOptions = {"Usuarios", "Pedidos", "Productos", "Categorías"};
+        String[] menuOptions = {"Usuarios", "Pedidos", "Productos"};
         for (String option : menuOptions) {
             JButton menuButton = new JButton(option);
             menuButton.setFocusPainted(false);
