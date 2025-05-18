@@ -91,7 +91,140 @@ public class PedidosView extends JPanel {
             }
         }));
         menuPanel.add(crearBoton("Exportar", "#A5571FF", e -> controller.exportarPedidos()));
+
+        // Campos de texto para buscar
+        JTextField buscadorUsuario = crearBuscador("Usuario...");
+        JTextField buscadorProducto = crearBuscador("Producto...");
+        JTextField buscadorFecha = crearBuscador("Fecha...");
+
+        menuPanel.add(buscadorUsuario);
+        menuPanel.add(buscadorProducto);
+        menuPanel.add(buscadorFecha);
+
+        menuPanel.add(crearBoton("Buscar", "#007BFF", e -> {
+            String usuario = buscadorUsuario.getText().equals("Usuario...") ? "" : buscadorUsuario.getText();
+            String producto = buscadorProducto.getText().equals("Producto...") ? "" : buscadorProducto.getText();
+            String fecha = buscadorFecha.getText().equals("Fecha...") ? "" : buscadorFecha.getText();
+
+            // Validar usuario como entero
+            if (!usuario.isEmpty()) {
+                try {
+                    Integer.parseInt(usuario);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "El ID de usuario debe ser un número entero.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+
+            // Validar producto como entero
+            if (!producto.isEmpty()) {
+                try {
+                    Integer.parseInt(producto);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "El ID de producto debe ser un número entero.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+
+            // Validar fecha con formato \d{4}-\d{2}-\d{2}
+            if (!fecha.isEmpty() && !fecha.matches("\\d{4}-\\d{2}-\\d{2}")) {
+                JOptionPane.showMessageDialog(this, "La fecha debe tener el formato YYYY-MM-DD.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Realizar la búsqueda si todas las validaciones son correctas
+            filtrarTablaPedidos(usuario, producto, fecha);
+        }));
+
+        // Botón para limpiar búsqueda
+        menuPanel.add(crearBoton("Limpiar", "#C2C2C2", e -> {
+            buscadorUsuario.setText("Usuario...");
+            buscadorUsuario.setForeground(Color.GRAY);
+            buscadorProducto.setText("Producto...");
+            buscadorProducto.setForeground(Color.GRAY);
+            buscadorFecha.setText("Fecha...");
+            buscadorFecha.setForeground(Color.GRAY);
+            actualizarTabla(controller.obtenerPedidos());
+        }));
+
         return menuPanel;
+    }
+
+    /**
+     * Crea un campo de texto para buscar.
+     *
+     * @param placeholder El texto de marcador de posición.
+     * @return JTextField configurado.
+     */
+    private JTextField crearBuscador(String placeholder) {
+        JTextField buscadorField = new JTextField();
+        buscadorField.setPreferredSize(new Dimension(130, 60));
+        buscadorField.setFont(new Font("Arial", Font.PLAIN, 24));
+        buscadorField.setText(placeholder);
+        buscadorField.setForeground(Color.GRAY);
+        buscadorField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (buscadorField.getText().equals(placeholder)) {
+                    buscadorField.setText("");
+                    buscadorField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (buscadorField.getText().isEmpty()) {
+                    buscadorField.setText(placeholder);
+                    buscadorField.setForeground(Color.GRAY);
+                }
+            }
+        });
+        return buscadorField;
+    }
+
+    /**
+     * Filtra la tabla de pedidos según los criterios especificados.
+     *
+     * @param usuario  ID del usuario a filtrar.
+     * @param producto ID del producto a filtrar.
+     * @param fecha    Fecha a filtrar.
+     */
+    private void filtrarTablaPedidos(String usuario, String producto, String fecha) {
+        List<String[]> pedidosFiltrados = controller.obtenerPedidos().stream()
+                .filter(pedido -> {
+                    boolean coincideUsuario = true;
+                    boolean coincideProducto = true;
+                    boolean coincideFecha = true;
+
+                    // Validar usuario como entero
+                    if (usuario != null && !usuario.isEmpty()) {
+                        try {
+                            int usuarioId = Integer.parseInt(usuario);
+                            coincideUsuario = pedido[1] != null && Integer.parseInt(pedido[1]) == usuarioId;
+                        } catch (NumberFormatException e) {
+                            coincideUsuario = false;
+                        }
+                    }
+
+                    // Validar producto como entero
+                    if (producto != null && !producto.isEmpty()) {
+                        try {
+                            int productoId = Integer.parseInt(producto);
+                            coincideProducto = pedido[2] != null && Integer.parseInt(pedido[2]) == productoId;
+                        } catch (NumberFormatException e) {
+                            coincideProducto = false;
+                        }
+                    }
+
+                    // Validar fecha con formato \d{4}-\d{2}-\d{2}
+                    if (fecha != null && !fecha.isEmpty()) {
+                        coincideFecha = pedido[4] != null && pedido[4].matches("\\d{4}-\\d{2}-\\d{2}") && pedido[4].equals(fecha);
+                    }
+
+                    return coincideUsuario && coincideProducto && coincideFecha;
+                })
+                .toList();
+        actualizarTabla(pedidosFiltrados);
     }
 
     /**

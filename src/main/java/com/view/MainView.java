@@ -29,7 +29,7 @@ public class MainView extends JFrame {
         // Configuración de la ventana principal
         setTitle("Tienda - Ventana Principal");
         setSize(1920, 1080);
-        setMinimumSize(new Dimension(1280, 720));
+        setMinimumSize(new Dimension(1800, 720));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(Color.WHITE);
         setLayout(new BorderLayout());

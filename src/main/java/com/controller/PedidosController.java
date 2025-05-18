@@ -32,11 +32,19 @@ public class PedidosController {
     }
 
     /**
+     * Obtiene la lista de pedidos del modelo.
+     *
+     * @return Lista de pedidos.
+     */
+    public List<String[]> obtenerPedidos() {
+        return model.obtenerPedidos();
+    }
+
+    /**
      * Carga los pedidos desde el modelo y actualiza la vista.
      */
     public void cargarPedidos() {
-        List<String[]> pedidos = model.obtenerPedidos();
-        view.actualizarTabla(pedidos);
+        view.actualizarTabla(obtenerPedidos());
     }
 
     /**

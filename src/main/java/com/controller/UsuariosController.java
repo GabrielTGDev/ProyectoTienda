@@ -31,12 +31,15 @@ public class UsuariosController {
         actualizarVista();
     }
 
+    public List<String[]> obtenerUsuarios() {
+        return model.obtenerUsuarios();
+    }
+
     /**
      * Actualiza la vista de usuarios obteniendo los datos del modelo.
      */
     public void actualizarVista() {
-        List<String[]> usuarios = model.obtenerUsuarios();
-        view.actualizarTabla(usuarios);
+        view.actualizarTabla(obtenerUsuarios());
     }
 
     /**
