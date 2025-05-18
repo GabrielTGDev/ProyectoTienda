@@ -38,7 +38,7 @@ public class UsuariosView extends JPanel {
     }
 
     /**
-     * Crea el menú secundario con botones para agregar, editar y eliminar usuarios.
+     * Crea el menú secundario con botones para agregar, editar, eliminar usuarios y un buscador.
      *
      * @return El panel del menú secundario.
      */
@@ -47,49 +47,117 @@ public class UsuariosView extends JPanel {
         menuPanel.setBackground(Color.decode("#F9F9F9"));
         menuPanel.setPreferredSize(new Dimension(0, 100));
 
-        menuPanel.add(crearBoton("Nuevo", "#48BA78", e -> abrirFormulario("Añadir Usuario", new Object[]{null, "", "", "","","",""})));
+        // Campo de texto para el buscador
+
+        // Botones existentes
+        menuPanel.add(crearBoton("Nuevo", "#48BA78", e -> abrirFormulario("Añadir Usuario", new Object[]{null, "", "", "", "", "", ""})));
         menuPanel.add(crearBoton("Editar", "#D5843B", e -> {
             int selectedRow = usuariosTable.getSelectedRow();
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Por favor, seleccione un usuario para editar.", "Error", JOptionPane.WARNING_MESSAGE);
             } else {
                 Object[] datos = new Object[]{
-                    tableModel.getValueAt(selectedRow, 0), // ID
-                    tableModel.getValueAt(selectedRow, 1), // Nombre
-                    tableModel.getValueAt(selectedRow, 2), // Apellido
-                    tableModel.getValueAt(selectedRow, 3), // Email
-                    tableModel.getValueAt(selectedRow, 4), // Calle
-                    tableModel.getValueAt(selectedRow, 5),  // Ciudad
-                    tableModel.getValueAt(selectedRow, 6)  // Código Postal
+                        tableModel.getValueAt(selectedRow, 0), // ID
+                        tableModel.getValueAt(selectedRow, 1), // Nombre
+                        tableModel.getValueAt(selectedRow, 2), // Apellido
+                        tableModel.getValueAt(selectedRow, 3), // Email
+                        tableModel.getValueAt(selectedRow, 4), // Calle
+                        tableModel.getValueAt(selectedRow, 5), // Ciudad
+                        tableModel.getValueAt(selectedRow, 6)  // Código Postal
                 };
                 abrirFormulario("Editar Usuario", datos);
             }
         }));
         menuPanel.add(crearBoton("Eliminar", "#C54A3D", e -> {
-            // Obtiene la fila seleccionada en la tabla de usuarios
             int selectedRow = usuariosTable.getSelectedRow();
-
-            // Verifica si no hay ninguna fila seleccionada
             if (selectedRow == -1) {
-                // Muestra un mensaje de advertencia al usuario
                 JOptionPane.showMessageDialog(this, "Por favor, seleccione un usuario que desee eliminar.", "Error", JOptionPane.WARNING_MESSAGE);
             } else {
                 try {
-                    // Obtiene el ID del usuario seleccionado como String y lo convierte a Integer
                     Object[] datos = new Object[]{
-                            tableModel.getValueAt(selectedRow, 0), // ID del usuario
-                            tableModel.getValueAt(selectedRow, 1), // Nombre del usuario
-                            tableModel.getValueAt(selectedRow, 2), // Apellido del usuario
+                            tableModel.getValueAt(selectedRow, 0),
+                            tableModel.getValueAt(selectedRow, 1),
+                            tableModel.getValueAt(selectedRow, 2),
                     };
                     eliminarUsuario(datos);
                 } catch (NumberFormatException ex) {
-                    // Muestra un mensaje de error si el ID no tiene un formato válido
                     JOptionPane.showMessageDialog(this, "El ID del usuario no tiene un formato válido.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }));
         menuPanel.add(crearBoton("Exportar", "#A5571FF", e -> controller.exportarUsuarios()));
+
+        // Campo de texto para el buscador
+        JTextField buscadorField = new JTextField();
+        buscadorField.setPreferredSize(new Dimension(240, 60));
+        buscadorField.setFont(new Font("Arial", Font.PLAIN, 24));
+        buscadorField.setText("Buscar..."); // Placeholder inicial
+        buscadorField.setForeground(Color.GRAY);
+        // Agregar FocusListener para manejar el placeholder
+        buscadorField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (buscadorField.getText().equals("Buscar...")) {
+                    buscadorField.setText("");
+                    buscadorField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (buscadorField.getText().isEmpty()) {
+                    buscadorField.setText("Buscar...");
+                    buscadorField.setForeground(Color.GRAY);
+                }
+            }
+        });
+        buscadorField.addActionListener(e -> {
+            String textoBusqueda = buscadorField.getText().toLowerCase();
+            if (!textoBusqueda.isEmpty()) {
+                filtrarTablaUsuarios(textoBusqueda);
+            } else {
+                actualizarTabla(controller.obtenerUsuarios());
+            }
+        });
+        menuPanel.add(buscadorField);
+
+        // Botón para buscar
+        menuPanel.add(crearBoton("Buscar", "#007BFF", e -> {
+            String textoBusqueda = buscadorField.getText().toLowerCase();
+            if (!textoBusqueda.isEmpty()) {
+                filtrarTablaUsuarios(textoBusqueda);
+            } else {
+                actualizarTabla(controller.obtenerUsuarios());
+            }
+        }));
+
+        // Botón para limpiar búsqueda
+        menuPanel.add(crearBoton("Limpiar", "#C2C2C2", e -> {
+            buscadorField.setText("Buscar...");
+            buscadorField.setForeground(Color.GRAY);
+            actualizarTabla(controller.obtenerUsuarios());
+        }));
+
         return menuPanel;
+    }
+
+    /**
+     * Filtra los datos de la tabla de usuarios según el texto de búsqueda.
+     *
+     * @param textoBusqueda Texto ingresado para buscar.
+     */
+    private void filtrarTablaUsuarios(String textoBusqueda) {
+        List<String[]> usuariosFiltrados = controller.obtenerUsuarios().stream()
+                .filter(usuario -> {
+                    for (String campo : usuario) {
+                        if (campo != null && campo.toLowerCase().contains(textoBusqueda)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                })
+                .toList();
+        actualizarTabla(usuariosFiltrados);
     }
 
     /**
@@ -202,9 +270,9 @@ public class UsuariosView extends JPanel {
     /**
      * Crea un botón con el texto y color de fondo especificados.
      *
-     * @param texto       Texto del botón.
-     * @param colorFondo  Color de fondo del botón en formato hexadecimal.
-     * @param action      Acción a realizar al hacer clic en el botón.
+     * @param texto      Texto del botón.
+     * @param colorFondo Color de fondo del botón en formato hexadecimal.
+     * @param action     Acción a realizar al hacer clic en el botón.
      * @return El botón creado.
      */
     private JButton crearBoton(String texto, String colorFondo, java.awt.event.ActionListener action) {
@@ -222,9 +290,9 @@ public class UsuariosView extends JPanel {
     /**
      * Muestra un formulario para agregar o editar un usuario.
      *
-     * @param titulo Título del formulario.
+     * @param titulo          Título del formulario.
      * @param formularioPanel Panel que contiene los campos del formulario.
-     * @param datos   Datos del usuario a editar (null para nuevo usuario).
+     * @param datos           Datos del usuario a editar (null para nuevo usuario).
      */
     private void mostrarFormulario(String titulo, JPanel formularioPanel, Object[] datos) {
         JFrame frame = new JFrame("Formulario - " + titulo);
@@ -265,7 +333,7 @@ public class UsuariosView extends JPanel {
                         }
 
                         if (nombreField == null || apellidoField == null || emailField == null ||
-                            calleField == null || ciudadField == null || codigoPostalField == null) {
+                                calleField == null || ciudadField == null || codigoPostalField == null) {
                             throw new IllegalStateException("No se encontraron los componentes esperados en el formulario.");
                         }
 
@@ -277,7 +345,7 @@ public class UsuariosView extends JPanel {
                         String codigoPostal = codigoPostalField.getText();
 
                         if (nombre.isEmpty() || apellido.isEmpty() || email.isEmpty() ||
-                            calle.isEmpty() || ciudad.isEmpty() || codigoPostal.isEmpty()) {
+                                calle.isEmpty() || ciudad.isEmpty() || codigoPostal.isEmpty()) {
                             JOptionPane.showMessageDialog(frame, "Por favor, complete todos los campos correctamente.", "Error", JOptionPane.ERROR_MESSAGE);
                         } else {
                             controller.guardarUsuario(new Object[]{
