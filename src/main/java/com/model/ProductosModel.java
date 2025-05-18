@@ -33,9 +33,9 @@ public class ProductosModel {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection();
         }
-
-        DBConnection.closeConnection();
 
         return productos;
     }
@@ -61,27 +61,25 @@ public class ProductosModel {
             DBConnection.closeConnection();
         }
 
-        DBConnection.closeConnection();
-
         return rowsAffected;
     }
 
-    public int guardarProducto(Object[] objects) {
-        if (objects.length < 4) {
+    public int guardarProducto(Object[] datos) {
+        if (datos.length < 4) {
             throw new IllegalArgumentException("El objeto debe contener 4 elementos: ID, nombre, precio y categoría.");
         }
 
         int rowsAffected = 0;
 
         try {
-            if (objects[0] == null) {
+            if (datos[0] == null) {
                 // Insertar si el ID es null
                 String queryInsert = "INSERT INTO productos (nombre, precio, categoria_id) VALUES (?, ?, ?);";
-                rowsAffected = DBConnection.executeUpdate(queryInsert, objects[1], objects[2], objects[3]);
+                rowsAffected = DBConnection.executeUpdate(queryInsert, datos[1], datos[2], datos[3]);
             } else {
                 // Actualizar el producto
                 String queryUpdate = "UPDATE productos SET nombre = ?, precio = ?, categoria_id = ? WHERE id = ?;";
-                rowsAffected = DBConnection.executeUpdate(queryUpdate, objects[1], objects[2], objects[3], objects[0]);
+                rowsAffected = DBConnection.executeUpdate(queryUpdate, datos[1], datos[2], datos[3], datos[0]);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -90,5 +88,23 @@ public class ProductosModel {
         }
 
         return rowsAffected;
+    }
+
+    public static boolean verificarProducto(int productoId) {
+        String query = "SELECT COUNT(*) FROM productos WHERE id = ?;";
+        boolean existe = false;
+
+        try {
+            ResultSet resultSet = DBConnection.executeQuery(query, productoId);
+            if (resultSet.next()) {
+                existe = resultSet.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection();
+        }
+
+        return existe;
     }
 }

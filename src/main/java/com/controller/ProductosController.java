@@ -11,6 +11,12 @@ public class ProductosController {
     private final ProductosModel model;
     private final ProductosView view;
 
+    /**
+     * Constructor del controlador de productos.
+     *
+     * @param model El modelo de productos.
+     * @param view  La vista de productos.
+     */
     public ProductosController(ProductosModel model, ProductosView view) {
         this.model = model;
         this.view = view;

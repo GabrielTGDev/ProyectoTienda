@@ -130,4 +130,28 @@ public class UsuariosModel {
 
         return rowsAffected;
     }
+
+    /**
+     * Verifica si un usuario existe en la base de datos.
+     *
+     * @param id ID del usuario a verificar.
+     * @return true si el usuario existe, false en caso contrario.
+     */
+    public static boolean verificarUsuario(int id) {
+        String query = "SELECT COUNT(*) FROM usuarios WHERE id = ?;";
+        boolean existe = false;
+
+        try {
+            ResultSet resultSet = DBConnection.executeQuery(query, id);
+            if (resultSet.next() && resultSet.getInt(1) > 0) {
+                existe = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection();
+        }
+
+        return existe;
+    }
 }
