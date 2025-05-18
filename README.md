@@ -447,4 +447,13 @@ gitGraph
     commit id: "Exportar pedidos"
     checkout S2/ventana_principal
     merge S2/export_pedidos
+
+    checkout main
+    merge S2/ventana_principal
+
+    branch S3/buscador
+    checkout S3/buscador
+    commit id: "Buscador"
+    checkout main
+    merge S3/buscador
 ```
