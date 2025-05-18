@@ -8,8 +8,8 @@ import java.util.List;
 
 public class ProductosController {
 
-    private ProductosModel model;
-    private ProductosView view;
+    private final ProductosModel model;
+    private final ProductosView view;
 
     public ProductosController(ProductosModel model, ProductosView view) {
         this.model = model;
@@ -35,7 +35,7 @@ public class ProductosController {
         try {
             int idProducto = datos[0] instanceof Integer ? (int) datos[0] : Integer.parseInt(datos[0].toString());
 
-            if (model.eliminarProducto(idProducto) > 0) {
+            if (ProductosModel.eliminarProducto(idProducto) > 0) {
                 view.mostrarMensaje("El producto \"" + datos[1] + "\" con ID " + datos[0] + " ha sido eliminado con éxito.", "Éxito");
                 cargarProductos();
             } else {
