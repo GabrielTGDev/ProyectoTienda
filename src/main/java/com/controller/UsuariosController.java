@@ -3,6 +3,11 @@ package com.controller;
 import com.model.UsuariosModel;
 import com.view.UsuariosView;
 
+import javax.swing.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
@@ -70,10 +75,41 @@ public class UsuariosController {
             }
         } catch (SQLIntegrityConstraintViolationException e) {
             view.mostrarMensaje("No se puede eliminar el usuario porque está siendo utilizado en otros registros.", "Error");
-        }  catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             view.mostrarMensaje("El ID del usuario no es válido.", "Error");
         } catch (Exception e) {
             view.mostrarMensaje("Ocurrió un error al intentar eliminar el usuario: " + e.getMessage(), "Error");
+        }
+    }
+
+    /**
+     * Exporta los usuarios a un archivo CSV utilizando un JFileChooser.
+     */
+    public void exportarUsuarios() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Selecciona la ubicación para exportar los usuarios: ");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Archivos CSV", "csv"));
+
+        int userSelection = fileChooser.showSaveDialog(null);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            if (!fileToSave.getName().endsWith(".csv")) {
+                fileToSave = new File(fileToSave.getAbsolutePath() + ".csv");
+            }
+
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave));
+                List<String[]> usuarios = model.obtenerUsuarios();
+                writer.write("ID,Nombre,Apellido,Email,Calle,Ciudad,Código Postal\n");
+                for (String[] usuario : usuarios) {
+                    writer.write(String.join(",", usuario));
+                    writer.newLine();
+                }
+                writer.close();
+                view.mostrarMensaje("Usuarios exportados correctamente a: " + fileToSave.getAbsolutePath(), "Éxito");
+            } catch (IOException e) {
+                view.mostrarMensaje("Error al exportar los usuarios: " + e.getMessage(), "Error");
+            }
         }
     }
 }
