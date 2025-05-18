@@ -20,16 +20,22 @@ public class DBConnection {
         return connection;
     }
 
-    public static ResultSet executeQuery(String query) throws SQLException {
+    public static ResultSet executeQuery(String query, Object... params) throws SQLException {
         Connection connection = getConnection();
-        Statement statement = connection.createStatement();
-        return statement.executeQuery(query);
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        for (int i = 0; i < params.length; i++) {
+            preparedStatement.setObject(i + 1, params[i]);
+        }
+        return preparedStatement.executeQuery();
     }
 
-    public static int executeUpdate(String query) throws SQLException {
+    public static int executeUpdate(String query, Object... params) throws SQLException {
         Connection connection = getConnection();
-        Statement statement = connection.createStatement();
-        return statement.executeUpdate(query);
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        for (int i = 0; i < params.length; i++) {
+            preparedStatement.setObject(i + 1, params[i]);
+        }
+        return preparedStatement.executeUpdate();
     }
 
     public static void closeConnection() {

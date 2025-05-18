@@ -4,6 +4,7 @@ import com.dbconnection.DBConnection;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,5 +38,24 @@ public class ProductosModel {
         DBConnection.closeConnection();
 
         return productos;
+    }
+
+    public static int eliminarProducto(int id) throws SQLIntegrityConstraintViolationException {
+        String query = "DELETE FROM productos WHERE id = ?;";
+        int rowsAffected = 0;
+
+        try {
+            rowsAffected = DBConnection.executeUpdate(query, id);
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw e;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection();
+        }
+
+        DBConnection.closeConnection();
+
+        return rowsAffected;
     }
 }

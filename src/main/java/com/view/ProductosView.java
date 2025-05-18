@@ -1,6 +1,9 @@
 package com.view;
 
+import com.controller.ProductosController;
+import com.dbconnection.DBConnection;
 import com.model.CategoriasModel;
+import com.model.ProductosModel;
 import com.view.form.FormElement;
 
 import javax.swing.*;
@@ -10,6 +13,7 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 /**
@@ -18,6 +22,7 @@ import java.util.List;
  */
 public class ProductosView extends JPanel {
 
+    private ProductosController controller; // Referencia al controlador
     private JTable productosTable; // Tabla para mostrar los productos
     private DefaultTableModel tableModel; // Modelo de datos para la tabla
 
@@ -31,6 +36,15 @@ public class ProductosView extends JPanel {
         mainPanel.add(crearMenuSecundario(), BorderLayout.NORTH);
         mainPanel.add(crearTablaProductos(), BorderLayout.CENTER);
         add(new JScrollPane(mainPanel), BorderLayout.CENTER);
+    }
+
+    /**
+     * Vincula el controlador con la vista.
+     *
+     * @param controller El controlador a vincular.
+     */
+    public void setController(ProductosController controller) {
+        this.controller = controller;
     }
 
     /**
@@ -68,7 +82,32 @@ public class ProductosView extends JPanel {
                 }
             }
         }));
-        menuPanel.add(crearBoton("Eliminar", "#C54A3D", e -> eliminarProducto()));
+        menuPanel.add(crearBoton("Eliminar", "#C54A3D", e -> {
+            // Obtiene la fila seleccionada en la tabla de productos
+            int selectedRow = productosTable.getSelectedRow();
+
+            // Verifica si no hay ninguna fila seleccionada
+            if (selectedRow == -1) {
+                // Muestra un mensaje de advertencia al usuario
+                JOptionPane.showMessageDialog(this, "Por favor, seleccione un producto que desee eliminar.", "Error", JOptionPane.WARNING_MESSAGE);
+            } else {
+                try {
+                    // Obtiene los datos del producto seleccionado de la tabla
+                    Object[] datos = new Object[]{
+                            tableModel.getValueAt(selectedRow, 0), // ID del producto
+                            tableModel.getValueAt(selectedRow, 1), // Nombre del producto
+                            Double.parseDouble(tableModel.getValueAt(selectedRow, 2).toString()), // Precio convertido a Double
+                            tableModel.getValueAt(selectedRow, 3)  // Categoría del producto
+                    };
+                    // Abre el formulario para editar el producto con los datos obtenidos
+                    eliminarProducto(datos);
+                } catch (
+                        NumberFormatException ex) { // TODO: Actualizar catch tras implementar el método eliminarProducto
+                    // Muestra un mensaje de error si el precio no tiene un formato válido
+                    JOptionPane.showMessageDialog(this, "El precio no tiene un formato válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }));
         return menuPanel;
     }
 
@@ -202,23 +241,43 @@ public class ProductosView extends JPanel {
      */
     private MouseAdapter crearMouseListenerBoton(JButton boton, String texto, String colorFondo) {
         return new MouseAdapter() {
+            /**
+             * Cambia el cursor a una mano y subraya el texto del botón cuando el mouse entra en el área del botón.
+             *
+             * @param e El evento de entrada del mouse.
+             */
             @Override
             public void mouseEntered(MouseEvent e) {
                 boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 boton.setText("<html><u>" + texto + "</u></html>");
             }
 
+            /**
+             * Restaura el texto del botón a su estado original cuando el mouse sale del área del botón.
+             *
+             * @param e El evento de salida del mouse.
+             */
             @Override
             public void mouseExited(MouseEvent e) {
                 boton.setText(texto);
             }
 
+            /**
+             * Cambia la fuente del botón a negrita y ajusta el borde cuando el botón es presionado.
+             *
+             * @param e El evento de presionar el mouse.
+             */
             @Override
             public void mousePressed(MouseEvent e) {
                 boton.setFont(boton.getFont().deriveFont(Font.BOLD));
                 boton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
             }
 
+            /**
+             * Restaura la fuente del botón a su estado original y ajusta el borde cuando el botón es soltado.
+             *
+             * @param e El evento de soltar el mouse.
+             */
             @Override
             public void mouseReleased(MouseEvent e) {
                 boton.setFont(boton.getFont().deriveFont(Font.PLAIN));
@@ -253,10 +312,29 @@ public class ProductosView extends JPanel {
     }
 
     /**
-     * Elimina un producto seleccionado de la tabla.
-     * (Implementación pendiente)
+     * Muestra un mensaje al usuario.
+     *
+     * @param mensaje El mensaje a mostrar.
+     * @param titulo  El título del mensaje.
      */
-    private void eliminarProducto() {
-        // Lógica para eliminar un producto
+    public void mostrarMensaje(String mensaje, String titulo) {
+        JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Elimina un producto seleccionado de la tabla.
+     */
+    private void eliminarProducto(Object[] datos) {
+        int confirmacion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de que desea eliminar el producto \"" + datos[1] + "\"?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            controller.eliminarProducto(datos); // Delegar al controlador
+        }
     }
 }
