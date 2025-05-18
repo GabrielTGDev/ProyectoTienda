@@ -30,6 +30,8 @@ public class CategoriasModel {
             e.printStackTrace();
         }
 
+        DBConnection.closeConnection();
+
         return categorias;
     }
 }
