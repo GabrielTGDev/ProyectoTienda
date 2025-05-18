@@ -88,6 +88,7 @@ public class UsuariosView extends JPanel {
                 }
             }
         }));
+        menuPanel.add(crearBoton("Exportar", "#A5571FF", e -> controller.exportarUsuarios()));
         return menuPanel;
     }
 
