@@ -40,6 +40,13 @@ public class ProductosModel {
         return productos;
     }
 
+    /**
+     * Función para eliminar un producto de la base de datos.
+     *
+     * @param id ID del producto a eliminar.
+     * @return Número de filas afectadas por la eliminación.
+     * @throws SQLIntegrityConstraintViolationException Si el producto está siendo utilizado en otros registros.
+     */
     public static int eliminarProducto(int id) throws SQLIntegrityConstraintViolationException {
         String query = "DELETE FROM productos WHERE id = ?;";
         int rowsAffected = 0;
@@ -55,6 +62,32 @@ public class ProductosModel {
         }
 
         DBConnection.closeConnection();
+
+        return rowsAffected;
+    }
+
+    public int guardarProducto(Object[] objects) {
+        if (objects.length < 4) {
+            throw new IllegalArgumentException("El objeto debe contener 4 elementos: ID, nombre, precio y categoría.");
+        }
+
+        int rowsAffected = 0;
+
+        try {
+            if (objects[0] == null) {
+                // Insertar si el ID es null
+                String queryInsert = "INSERT INTO productos (nombre, precio, categoria_id) VALUES (?, ?, ?);";
+                rowsAffected = DBConnection.executeUpdate(queryInsert, objects[1], objects[2], objects[3]);
+            } else {
+                // Actualizar el producto
+                String queryUpdate = "UPDATE productos SET nombre = ?, precio = ?, categoria_id = ? WHERE id = ?;";
+                rowsAffected = DBConnection.executeUpdate(queryUpdate, objects[1], objects[2], objects[3], objects[0]);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection();
+        }
 
         return rowsAffected;
     }

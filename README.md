@@ -99,6 +99,26 @@ CREATE TABLE Pedidos (
 );
 ```
 
+> Para un correcto funcionamiento de la aplicación, he modificado las tablas para que los campos `id` sean 
+autoincrementales.
+```sql
+ALTER TABLE direcciones DROP FOREIGN KEY direcciones_ibfk_1;
+ALTER TABLE pedidos DROP FOREIGN KEY pedidos_ibfk_1;
+ALTER TABLE usuarios MODIFY COLUMN id INT AUTO_INCREMENT;
+ALTER TABLE direcciones ADD CONSTRAINT direcciones_ibfk_1 FOREIGN KEY (usuario_id) REFERENCES usuarios(id);
+ALTER TABLE pedidos ADD CONSTRAINT pedidos_ibfk_1 FOREIGN KEY (usuario_id) REFERENCES usuarios(id);
+
+ALTER TABLE pedidos DROP FOREIGN KEY pedidos_ibfk_2;
+ALTER TABLE productos MODIFY COLUMN id INT AUTO_INCREMENT;
+ALTER TABLE pedidos ADD CONSTRAINT pedidos_ibfk_2 FOREIGN KEY (producto_id) REFERENCES productos(id);
+
+ALTER TABLE productos MODIFY COLUMN id INT AUTO_INCREMENT;
+
+ALTER TABLE productos DROP FOREIGN KEY productos_ibfk_1;
+ALTER TABLE categorias MODIFY COLUMN id INT AUTO_INCREMENT;
+ALTER TABLE productos ADD CONSTRAINT productos_ibfk_1 FOREIGN KEY (categoria_id) REFERENCES categorias(id);
+```
+
 ### Descripción de las Tablas
 
 - **Categorias**: Almacena las categorías de los productos. Cada categoría tiene un ID único y un nombre.

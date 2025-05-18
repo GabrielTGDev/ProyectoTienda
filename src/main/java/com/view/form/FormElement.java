@@ -47,12 +47,12 @@ package com.view.form;
          * Creates a panel containing a labeled combo box.
          *
          * @param etiqueta The label text to display.
-         * @param opciones The options to populate the combo box.
+         * @param CategoriaItem[] The options to populate the combo box.
          * @param seleccion The initially selected item in the combo box.
          * @return A JPanel containing the label and combo box.
          */
-        public static JPanel crearCampoComboBox(String etiqueta, String[] opciones, Object seleccion) {
-            JComboBox<String> comboBox = new JComboBox<>(opciones);
+        public static JPanel crearCampoComboBox(String etiqueta, CategoriaItem[] opciones, Object seleccion) {
+            JComboBox<CategoriaItem> comboBox = new JComboBox<>(opciones);
             comboBox.setSelectedItem(seleccion);
             return crearCampo(etiqueta, comboBox);
         }

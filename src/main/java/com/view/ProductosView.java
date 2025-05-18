@@ -4,6 +4,7 @@ import com.controller.ProductosController;
 import com.dbconnection.DBConnection;
 import com.model.CategoriasModel;
 import com.model.ProductosModel;
+import com.view.form.CategoriaItem;
 import com.view.form.FormElement;
 
 import javax.swing.*;
@@ -15,6 +16,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import com.view.form.CategoriaItem;
 
 /**
  * Clase que representa la vista de productos en la aplicación.
@@ -96,15 +98,13 @@ public class ProductosView extends JPanel {
                     Object[] datos = new Object[]{
                             tableModel.getValueAt(selectedRow, 0), // ID del producto
                             tableModel.getValueAt(selectedRow, 1), // Nombre del producto
-                            Double.parseDouble(tableModel.getValueAt(selectedRow, 2).toString()), // Precio convertido a Double
-                            tableModel.getValueAt(selectedRow, 3)  // Categoría del producto
                     };
                     // Abre el formulario para editar el producto con los datos obtenidos
                     eliminarProducto(datos);
-                } catch (
-                        NumberFormatException ex) { // TODO: Actualizar catch tras implementar el método eliminarProducto
-                    // Muestra un mensaje de error si el precio no tiene un formato válido
-                    JOptionPane.showMessageDialog(this, "El precio no tiene un formato válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    // Muestra un mensaje de error genérico si ocurre un problema al eliminar el producto
+                    JOptionPane.showMessageDialog(this, "Ocurrió un error al intentar eliminar el producto.", "Error", JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
                 }
             }
         }));
@@ -122,11 +122,13 @@ public class ProductosView extends JPanel {
         CategoriasModel categoriasModel = new CategoriasModel();
         List<String[]> categorias = categoriasModel.obtenerCategorias();
 
-        // Crear un array de nombres de categorías para el JComboBox
-        String[] opcionesCategorias = new String[categorias.size() + 1];
-        opcionesCategorias[0] = "Seleccione una categoría"; // Opción inicial
+        // Crear un array de objetos CategoriaItem para el JComboBox
+        CategoriaItem[] opcionesCategorias = new CategoriaItem[categorias.size() + 1];
+        opcionesCategorias[0] = new CategoriaItem(0, "Seleccione una categoría"); // Opción inicial
         for (int i = 0; i < categorias.size(); i++) {
-            opcionesCategorias[i + 1] = categorias.get(i)[1]; // Nombre de la categoría
+            int id = Integer.parseInt(categorias.get(i)[0]);
+            String nombre = categorias.get(i)[1];
+            opcionesCategorias[i + 1] = new CategoriaItem(id, nombre);
         }
 
         // Crear el panel del formulario
@@ -297,7 +299,64 @@ public class ProductosView extends JPanel {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setMinimumSize(new Dimension(1280, 720));
         frame.setResizable(false);
-        frame.add(new FormsView(titulo, formularioPanel));
+        frame.add(new FormsView(
+                titulo,
+                formularioPanel,
+                e -> {
+                    try {
+                        // Buscar los componentes dentro de los paneles anidados
+                        JTextField nombreField = null;
+                        JTextField precioField = null;
+                        JComboBox<?> categoriaBox = null;
+
+                        for (Component component : formularioPanel.getComponents()) {
+                            if (component instanceof JPanel) {
+                                JPanel panel = (JPanel) component;
+                                for (Component innerComponent : panel.getComponents()) {
+                                    if (innerComponent instanceof JTextField && nombreField == null) {
+                                        nombreField = (JTextField) innerComponent;
+                                    } else if (innerComponent instanceof JTextField) {
+                                        precioField = (JTextField) innerComponent;
+                                    } else if (innerComponent instanceof JComboBox) {
+                                        categoriaBox = (JComboBox<?>) innerComponent;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (nombreField == null || precioField == null || categoriaBox == null) {
+                            throw new IllegalStateException("No se encontraron los componentes esperados en el formulario.");
+                        }
+
+                        // Obtener los valores
+                        String nombre = nombreField.getText();
+                        String precioTexto = precioField.getText().replace(",", "."); // Reemplazar coma por punto
+                        double precio = Double.parseDouble(precioTexto);
+
+                        // Validar y obtener el ID de la categoría
+                        if (categoriaBox.getSelectedItem() instanceof CategoriaItem) {
+                            int categoriaId = ((CategoriaItem) categoriaBox.getSelectedItem()).getId();
+
+                            if (nombre.isEmpty() || precio <= 0 || categoriaId == 0) {
+                                JOptionPane.showMessageDialog(frame, "Por favor, complete todos los campos correctamente.", "Error", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                // Llamar al controlador para añadir o editar el producto
+                                controller.guardarProducto(new Object[]{null, nombre, precio, categoriaId});
+                                frame.dispose(); // Cerrar el formulario
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(frame, "Seleccione una categoría válida.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (ClassCastException ex) {
+                        JOptionPane.showMessageDialog(frame, "Error al procesar los datos del formulario. Verifique los componentes.", "Error", JOptionPane.ERROR_MESSAGE);
+                        ex.printStackTrace();
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(frame, "El precio debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                        ex.printStackTrace();
+                    } catch (IllegalStateException ex) {
+                        JOptionPane.showMessageDialog(frame, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }));
         frame.setVisible(true);
     }
 
@@ -327,7 +386,7 @@ public class ProductosView extends JPanel {
     private void eliminarProducto(Object[] datos) {
         int confirmacion = JOptionPane.showConfirmDialog(
                 this,
-                "¿Está seguro de que desea eliminar el producto \"" + datos[1] + "\"?",
+                "¿Está seguro de que desea eliminar el producto \"" + datos[1] + "\" con ID " + datos[0] + "?",
                 "Confirmar eliminación",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE

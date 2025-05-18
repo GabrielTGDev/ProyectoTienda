@@ -50,4 +50,20 @@ public class ProductosController {
             e.printStackTrace();
         }
     }
+
+    public void guardarProducto(Object[] objects) {
+        try {
+            if (model.guardarProducto(objects) > 0) {
+                view.mostrarMensaje("El producto \"" + objects[1] + "\" ha sido guardado con éxito.", "Éxito");
+                cargarProductos();
+            } else {
+                view.mostrarMensaje("No se pudo guardar el producto. Verifique los datos ingresados.", "Error");
+            }
+        } catch (NumberFormatException e) {
+            view.mostrarMensaje("El ID del producto no es válido.", "Error");
+        } catch (Exception e) {
+            view.mostrarMensaje("Ocurrió un error al intentar guardar el producto.", "Error");
+            e.printStackTrace();
+        }
+    }
 }
