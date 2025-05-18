@@ -1,9 +1,7 @@
 package com.view;
 
 import com.controller.ProductosController;
-import com.dbconnection.DBConnection;
 import com.model.CategoriasModel;
-import com.model.ProductosModel;
 import com.view.form.CategoriaItem;
 import com.view.form.FormElement;
 
@@ -14,10 +12,8 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
-import com.view.form.CategoriaItem;
 
 /**
  * Clase que representa la vista de productos en la aplicación.

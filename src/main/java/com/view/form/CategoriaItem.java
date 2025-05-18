@@ -13,7 +13,9 @@ public class CategoriaItem {
         return id;
     }
 
-    public Object getNombre() { return nombre; }
+    public String getNombre() {
+        return nombre;
+    }
 
     @Override
     public String toString() {
