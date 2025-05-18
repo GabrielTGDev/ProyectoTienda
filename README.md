@@ -462,4 +462,10 @@ gitGraph
     commit id: "Crud pedidos"
     checkout S2/ventana_principal
     merge S2/crud_pedidos
+
+    branch S2/export_usuarios
+    checkout S2/export_usuarios
+    commit id: "Exportar usuarios"
+    checkout S2/ventana_principal
+    merge S2/export_usuarios
 ```
