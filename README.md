@@ -446,4 +446,6 @@ gitGraph
     branch S2/crud_productos
     checkout S2/crud_productos
     commit id: "Crud productos"
+    checkout S2/ventana_principal
+    merge S2/crud_productos    
 ```
