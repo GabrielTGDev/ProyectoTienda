@@ -19,6 +19,8 @@ class DBConnectionTest {
             assertTrue(resultSet.next(), "El ResultSet debería contener al menos un registro.");
             assertEquals(1, resultSet.getInt(1), "El valor devuelto debería ser 1.");
         }, "El método executeQuery no debería lanzar excepciones para una consulta válida.");
+
+        DBConnection.closeConnection();
     }
 
     @Test
@@ -32,7 +34,10 @@ class DBConnectionTest {
 
             rowsAffected = DBConnection.executeUpdate("DROP TABLE test_table;");
             assertEquals(0, rowsAffected, "La eliminación de la tabla no debería afectar filas.");
+
         }, "El método executeUpdate no debería lanzar excepciones para consultas válidas.");
+
+        DBConnection.closeConnection();
     }
 
     @Test
@@ -41,17 +46,20 @@ class DBConnectionTest {
             DBConnection.executeQuery("SELECT * FROM tabla_inexistente;");
         }, "Debería lanzarse una SQLException para una consulta inválida.");
         assertNotNull(exception.getMessage(), "El mensaje de la excepción no debería ser nulo.");
+        DBConnection.closeConnection();
+
     }
 
     @Test
     void testDatabaseConnection() {
         assertDoesNotThrow(() -> {
             Connection connection = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3307/tienda", "root", ""
+                    "jdbc:mysql://localhost:3307/tienda", "root", ""
             );
             assertNotNull(connection, "La conexión a la base de datos no debería ser nula.");
             assertFalse(connection.isClosed(), "La conexión a la base de datos no debería estar cerrada.");
-            connection.close();
+
         }, "No debería lanzarse ninguna excepción al establecer la conexión a la base de datos.");
+        DBConnection.closeConnection();
     }
 }

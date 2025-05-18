@@ -245,7 +245,7 @@ public class ProductosView extends JPanel {
     /**
      * Actualiza los datos de la tabla de productos.
      *
-     * @param productos Una lista de arreglos de cadenas que representan los productos.
+     * @param productos Una lista de arrays de cadenas que representan los productos.
      */
     public void actualizarTabla(List<String[]> productos) {
         tableModel.setRowCount(0);

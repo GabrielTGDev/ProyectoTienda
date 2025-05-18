@@ -34,6 +34,8 @@ public class ProductosModel {
             e.printStackTrace();
         }
 
+        DBConnection.closeConnection();
+
         return productos;
     }
 }
