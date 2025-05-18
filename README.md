@@ -456,4 +456,10 @@ gitGraph
     commit id: "Crud usuarios"
     checkout S2/ventana_principal
     merge S2/crud_usuarios
+
+    branch S2/crud_pedidos
+    checkout S2/crud_pedidos
+    commit id: "Crud pedidos"
+    checkout S2/ventana_principal
+    merge S2/crud_pedidos
 ```
