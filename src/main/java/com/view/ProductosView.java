@@ -16,6 +16,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+
 import com.view.form.CategoriaItem;
 
 /**
@@ -59,7 +60,7 @@ public class ProductosView extends JPanel {
         menuPanel.setBackground(Color.decode("#F9F9F9"));
         menuPanel.setPreferredSize(new Dimension(0, 100));
 
-        menuPanel.add(crearBoton("Nuevo", "#48BA78", e -> abrirFormulario("Añadir Producto", new Object[]{"", 0.0, "Categoría 1"})));
+        menuPanel.add(crearBoton("Nuevo", "#48BA78", e -> abrirFormulario("Añadir Producto", new Object[]{null, "", 0.0, "Categoría 1"})));
         menuPanel.add(crearBoton("Editar", "#D5843B", e -> {
             // Obtiene la fila seleccionada en la tabla de productos
             int selectedRow = productosTable.getSelectedRow();
@@ -72,6 +73,7 @@ public class ProductosView extends JPanel {
                 try {
                     // Obtiene los datos del producto seleccionado de la tabla
                     Object[] datos = new Object[]{
+                            tableModel.getValueAt(selectedRow, 0), // ID del producto
                             tableModel.getValueAt(selectedRow, 1), // Nombre del producto
                             Double.parseDouble(tableModel.getValueAt(selectedRow, 2).toString()), // Precio convertido a Double
                             tableModel.getValueAt(selectedRow, 3)  // Categoría del producto
@@ -135,12 +137,18 @@ public class ProductosView extends JPanel {
         JPanel formularioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         formularioPanel.setBackground(Color.WHITE);
         formularioPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
-        formularioPanel.add(FormElement.crearCampoTexto("Nombre:", (String) datos[0]));
-        formularioPanel.add(FormElement.crearCampoPrecio("Precio:", datos[1]));
-        formularioPanel.add(FormElement.crearCampoComboBox("Categoría:", opcionesCategorias, datos[2]));
+        formularioPanel.add(FormElement.crearCampoTexto("Nombre:", (String) datos[1]));
+        formularioPanel.add(FormElement.crearCampoPrecio("Precio:", datos[2]));
+        formularioPanel.add(FormElement.crearCampoComboBox("Categoría:", opcionesCategorias,
+                opcionesCategorias[0].getNombre().equals(datos[3]) ? opcionesCategorias[0] :
+                        java.util.Arrays.stream(opcionesCategorias)
+                                .filter(categoria -> categoria.toString().equals(datos[3]))
+                                .findFirst()
+                                .orElse(opcionesCategorias[0])
+        ));
 
         // Mostrar el formulario
-        mostrarFormulario(titulo, formularioPanel);
+        mostrarFormulario(titulo, formularioPanel, datos);
     }
 
     /**
@@ -293,8 +301,9 @@ public class ProductosView extends JPanel {
      *
      * @param titulo          El título de la ventana.
      * @param formularioPanel El panel que contiene el formulario.
+     * @param datos           Los datos iniciales del formulario.
      */
-    private void mostrarFormulario(String titulo, JPanel formularioPanel) {
+    private void mostrarFormulario(String titulo, JPanel formularioPanel, Object[] datos) {
         JFrame frame = new JFrame("Formulario - " + titulo);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setMinimumSize(new Dimension(1280, 720));
@@ -341,7 +350,7 @@ public class ProductosView extends JPanel {
                                 JOptionPane.showMessageDialog(frame, "Por favor, complete todos los campos correctamente.", "Error", JOptionPane.ERROR_MESSAGE);
                             } else {
                                 // Llamar al controlador para añadir o editar el producto
-                                controller.guardarProducto(new Object[]{null, nombre, precio, categoriaId});
+                                controller.guardarProducto(new Object[]{datos[0], nombre, precio, categoriaId});
                                 frame.dispose(); // Cerrar el formulario
                             }
                         } else {

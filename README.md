@@ -113,10 +113,6 @@ ALTER TABLE productos MODIFY COLUMN id INT AUTO_INCREMENT;
 ALTER TABLE pedidos ADD CONSTRAINT pedidos_ibfk_2 FOREIGN KEY (producto_id) REFERENCES productos(id);
 
 ALTER TABLE productos MODIFY COLUMN id INT AUTO_INCREMENT;
-
-ALTER TABLE productos DROP FOREIGN KEY productos_ibfk_1;
-ALTER TABLE categorias MODIFY COLUMN id INT AUTO_INCREMENT;
-ALTER TABLE productos ADD CONSTRAINT productos_ibfk_1 FOREIGN KEY (categoria_id) REFERENCES categorias(id);
 ```
 
 ### Descripción de las Tablas

@@ -13,8 +13,11 @@ public class CategoriaItem {
         return id;
     }
 
+    public Object getNombre() { return nombre; }
+
     @Override
     public String toString() {
         return nombre; // Esto se mostrará en el JComboBox
     }
+
 }
