@@ -90,6 +90,7 @@ public class PedidosView extends JPanel {
                 }
             }
         }));
+        menuPanel.add(crearBoton("Exportar", "#A5571FF", e -> controller.exportarPedidos()));
         return menuPanel;
     }
 
