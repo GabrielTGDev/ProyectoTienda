@@ -405,4 +405,8 @@ public class ProductosView extends JPanel {
             controller.eliminarProducto(datos); // Delegar al controlador
         }
     }
+
+    public JTable getProductosTable() {
+        return productosTable;
+    }
 }
