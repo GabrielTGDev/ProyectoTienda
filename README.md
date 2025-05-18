@@ -99,6 +99,24 @@ CREATE TABLE Pedidos (
 );
 ```
 
+> Para un correcto funcionamiento de la aplicación, he modificado las tablas para que los campos `id` sean 
+autoincrementales.
+```sql
+ALTER TABLE direcciones DROP FOREIGN KEY direcciones_ibfk_1;
+ALTER TABLE pedidos DROP FOREIGN KEY pedidos_ibfk_1;
+ALTER TABLE usuarios MODIFY COLUMN id INT AUTO_INCREMENT;
+ALTER TABLE direcciones ADD CONSTRAINT direcciones_ibfk_1 FOREIGN KEY (usuario_id) REFERENCES usuarios(id);
+ALTER TABLE pedidos ADD CONSTRAINT pedidos_ibfk_1 FOREIGN KEY (usuario_id) REFERENCES usuarios(id);
+
+ALTER TABLE pedidos DROP FOREIGN KEY pedidos_ibfk_2;
+ALTER TABLE productos MODIFY COLUMN id INT AUTO_INCREMENT;
+ALTER TABLE pedidos ADD CONSTRAINT pedidos_ibfk_2 FOREIGN KEY (producto_id) REFERENCES productos(id);
+
+ALTER TABLE productos MODIFY COLUMN id INT AUTO_INCREMENT;
+
+ALTER TABLE pedidos MODIFY COLUMN id INT AUTO_INCREMENT;
+```
+
 ### Descripción de las Tablas
 
 - **Categorias**: Almacena las categorías de los productos. Cada categoría tiene un ID único y un nombre.
@@ -382,3 +400,78 @@ El diseño de la interfaz gráfica se realizó utilizando Figma, al cual se pued
 
 #### Formularios de adición y edición
 ![Formularios.svg](src/main/resources/img/Formularios.svg)
+
+## Mapa de Git
+
+```mermaid
+gitGraph
+    commit id: "Initial commit"
+
+    branch S1/db_connection
+    checkout S1/db_connection
+    commit id: "DB connection work"
+    checkout main
+    merge S1/db_connection
+
+    branch S1/swing_test
+    checkout S1/swing_test
+    commit id: "Swing tests"
+    checkout main
+    merge S1/swing_test
+
+    branch S2/ventana_principal
+    checkout S2/ventana_principal
+    commit id: "Ventana principal"
+
+    branch S2/ventana_principal_productos
+    checkout S2/ventana_principal_productos
+    commit id: "Ventana principal - productos"
+    checkout S2/ventana_principal
+    merge S2/ventana_principal_productos
+
+    branch S2/ventana_formularios
+    checkout S2/ventana_formularios
+    commit id: "Ventana formularios"
+    
+    branch S2/ventana_formularios_productos
+    checkout S2/ventana_formularios_productos
+    commit id: "Ventana formularios - productos"
+    checkout S2/ventana_formularios
+    merge S2/ventana_formularios_productos
+
+    checkout S2/ventana_principal
+    merge S2/ventana_formularios
+
+    commit id: "Refactor de main"
+    commit id: "Creación de CategoríasModel"
+
+    branch S2/crud_productos
+    checkout S2/crud_productos
+    commit id: "Crud productos"
+    checkout S2/ventana_principal
+    merge S2/crud_productos
+
+    branch S2/crud_usuarios
+    checkout S2/crud_usuarios
+    commit id: "Crud usuarios"
+    checkout S2/ventana_principal
+    merge S2/crud_usuarios
+
+    branch S2/crud_pedidos
+    checkout S2/crud_pedidos
+    commit id: "Crud pedidos"
+    checkout S2/ventana_principal
+    merge S2/crud_pedidos
+
+    branch S2/export_usuarios
+    checkout S2/export_usuarios
+    commit id: "Exportar usuarios"
+    checkout S2/ventana_principal
+    merge S2/export_usuarios
+
+    branch S2/export_pedidos
+    checkout S2/export_pedidos
+    commit id: "Exportar pedidos"
+    checkout S2/ventana_principal
+    merge S2/export_pedidos
+```
