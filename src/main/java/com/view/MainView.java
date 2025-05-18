@@ -1,7 +1,9 @@
 package com.view;
 
+import com.controller.PedidosController;
 import com.controller.ProductosController;
 import com.controller.UsuariosController;
+import com.model.PedidosModel;
 import com.model.ProductosModel;
 import com.model.UsuariosModel;
 
@@ -112,6 +114,13 @@ public class MainView extends JFrame {
             UsuariosView view = new UsuariosView();
             new UsuariosController(model, view);
             contentPanel.add(view, "Usuarios");
+        }
+
+        if ("Pedidos".equals(option)) {
+            PedidosModel model = new PedidosModel();
+            PedidosView view = new PedidosView();
+            new PedidosController(model, view);
+            contentPanel.add(view, "Pedidos");
         }
 
         if ("Productos".equals(option)) {
